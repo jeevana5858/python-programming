@@ -1,1 +1,36 @@
-
+POSITIVE = {"good", "clean", "fast", "helpful", "improved"}
+NEGATIVE = {"bad", "dirty", "slow", "rude", "smoke", "broken"}
+NEGATORS = {"not", "never", "no"}
+def score(text):
+    """+1 per positive word, -1 per negative word; a preceding negator flips it."""
+    words = text.lower().replace(".", " ").replace(",", " ").split()
+    total = 0
+    prev_is_negator = False
+    for word in words:
+        word_value = 0
+        if word in POSITIVE:
+            word_value = 1
+        elif word in NEGATIVE:
+            word_value = -1
+            
+        if word_value != 0:
+            if prev_is_negator:
+                word_value *= -1
+            total += word_value
+            prev_is_negator = False
+        elif word in NEGATORS:
+            prev_is_negator = True
+        else:
+            pass
+    return total
+def label(text):
+    s = score(text)
+    return "positive" if s > 0 else "negative" if s < 0 else "neutral"
+complaints = [
+    "Roads are clean and the bus was fast.",
+    "Smoke from the factory, air is bad.",
+    "The staff were not helpful.",
+    "Not bad, service improved."
+]
+for c in complaints:
+    print(f"{label(c):8} | {c}")
