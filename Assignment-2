@@ -1,1 +1,23 @@
-
+import time
+import sys
+def ways_naive(n):
+    if n <= 1: return 1
+    return ways_naive(n-1) + ways_naive(n-2)
+def ways_loop(n):
+    a, b = 1, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+print(f"{'n':<5} {'Naive Time':<15} {'Loop Time':<15} {'Correct?'}")
+for n in [10, 20, 25, 30]:
+    start = time.perf_counter()
+    res_n = ways_naive(n)
+    time_n = time.perf_counter() - start
+    start = time.perf_counter()
+    res_l = ways_loop(n)
+    time_l = time.perf_counter() - start
+    print(f"{n:<5} {time_n:<15.5f} {time_l:<15.5f} {res_n == res_l}")
+print("\nTesting n=1000 with loop:")
+start = time.perf_counter()
+res_big = ways_loop(1000)
+print(f"Success! Time: {time.perf_counter()-start:.5f}s")
