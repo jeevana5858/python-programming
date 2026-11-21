@@ -1,1 +1,27 @@
-
+def get_rates(season):
+    if season == "summer":
+        return 32.00, 0.45, 0.30   # base, fat step, snf step
+    return 30.00, 0.40, 0.30
+def rate_per_litre(fat, snf, season):
+    base, fat_step, snf_step = get_rates(season)
+    fat_steps = (fat - 3.5) / 0.1
+    snf_steps = (snf - 8.5) / 0.1
+    return round(base + fat_steps * fat_step + snf_steps * snf_step, 2)
+def bonus(total_litres):
+    if total_litres > 500:
+        return total_litres * 0.50
+    return 0
+def ten_day_total(entries, season):
+    total_litres = 0
+    amount = 0
+    for litres, fat, snf in entries:
+        total_litres += litres
+        amount += litres * rate_per_litre(fat, snf, season)
+    return round(amount + bonus(total_litres), 2)
+print("Normal rate:", rate_per_litre(3.5, 8.5, "normal"))
+print("Summer rate:", rate_per_litre(3.5, 8.5, "summer"))
+print("Bonus for 600 L:", bonus(600))
+print("Bonus for 400 L:", bonus(400))
+entries = [(300, 3.5, 8.5), (300, 3.5, 8.5)]
+print("Ten-day total (normal):", ten_day_total(entries, "normal"))
+print("Ten-day total (summer):", ten_day_total(entries, "summer"))
